@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AppStream metadata: used by Flathub, GNOME Software and KDE Discover. -->
+<component type="desktop-application">
+  <id>com.arvucore.arvudoro</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Arvudoro</name>
+  <summary>Pomodoro timer whose breaks make you move</summary>
+  <summary xml:lang="pt-BR">Timer pomodoro em que cada pausa faz você se mexer</summary>
+  <developer id="com.arvucore">
+    <name>Arvucore</name>
+  </developer>
+  <description>
+    <p>Arvudoro is a pomodoro timer with active breaks. Each break brings one compound exercise, animated step by step, that you can do with dumbbells, a pull-up bar, a jump rope or just your body. Long breaks become a short circuit.</p>
+    <p xml:lang="pt-BR">O Arvudoro é um timer pomodoro com pausas ativas. Cada pausa traz um exercício composto, animado passo a passo, que você faz com halteres, barra fixa, corda de pular ou o próprio corpo. A pausa longa vira um circuito curto.</p>
+    <ul>
+      <li>Focus, short break, long break and rounds, with tray icon, notifications and sounds</li>
+      <li>21 compound exercises with animated demonstrations and form cues</li>
+      <li>Rotation that avoids repeats and alternates muscle groups</li>
+      <li>Stats: pomodoros, exercises, reps and day streak</li>
+      <li>No account, no telemetry: everything stays on your computer</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">com.arvucore.arvudoro.desktop</launchable>
+  <url type="homepage">https://github.com/samoaste/arvudoro</url>
+  <url type="bugtracker">https://github.com/samoaste/arvudoro/issues</url>
+  <url type="vcs-browser">https://github.com/samoaste/arvudoro</url>
+  <url type="contribute">https://github.com/samoaste/arvudoro/blob/main/CONTRIBUTING.md</url>
+  <url type="donation">https://github.com/sponsors/samoaste</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>A break with an animated exercise</caption>
+      <image>https://raw.githubusercontent.com/samoaste/arvudoro/main/docs/screenshots/break.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Focus timer</caption>
+      <image>https://raw.githubusercontent.com/samoaste/arvudoro/main/docs/screenshots/timer.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Stats</caption>
+      <image>https://raw.githubusercontent.com/samoaste/arvudoro/main/docs/screenshots/stats.png</image>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>Utility</category>
+    <category>Clock</category>
+  </categories>
+  <keywords>
+    <keyword>pomodoro</keyword>
+    <keyword>timer</keyword>
+    <keyword>exercise</keyword>
+    <keyword>fitness</keyword>
+    <keyword>productivity</keyword>
+  </keywords>
+  <content_rating type="oars-1.1"/>
+  <branding>
+    <color type="primary" scheme_preference="light">#DDEAE1</color>
+    <color type="primary" scheme_preference="dark">#103820</color>
+  </branding>
+  <releases>
+    <release version="0.1.0" date="2026-09-22">
+      <description>
+        <p>First release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

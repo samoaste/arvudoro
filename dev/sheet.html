@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Rig sheet</title>
+<link rel="stylesheet" href="preview.css">
+<style>
+body{background:#0B120E;color:#E8EDE9;font:12px system-ui;margin:8px}
+.row{display:flex;align-items:center;gap:4px;margin-bottom:4px}
+.row b{width:120px;flex:none}
+svg{width:110px;height:110px;background:#131C16}
+</style></head><body>
+<script type="module">
+import { Figure } from '../src/frontend/rig.js';
+import { EXERCISES } from '../src/frontend/exercises.js';
+const only=new URLSearchParams(location.search).get('ids');
+const list=only?EXERCISES.filter(e=>only.split(',').includes(e.id)):EXERCISES;
+const N=+(new URLSearchParams(location.search).get('n')||10);
+for(const ex of list){
+  const row=document.createElement('div');row.className='row';row.innerHTML=`<b>${ex.id}</b>`;
+  document.body.append(row);
+  const total=ex.frames.reduce((s,f)=>s+(f.hold||0)+f.d,0);
+  for(let i=0;i<N;i++){
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');row.append(svg);
+    const f=new Figure(svg);f.load(ex);f.draw(total*i/N);
+  }
+}
+</script></body></html>

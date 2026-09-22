@@ -1,0 +1,103 @@
+/* Arvucore design tokens — v2.0
+   Copied from arvucore/branding/brand/tokens/colors.css — keep in sync. */
+:root {
+  --arv-forest-50: #F1F6F2;
+  --arv-forest-100: #DDEAE1;
+  --arv-forest-200: #BAD5C3;
+  --arv-forest-300: #8DB89D;
+  --arv-forest-400: #5E9673;
+  --arv-forest-500: #3B7551;
+  --arv-forest-600: #23573A;
+  --arv-forest-700: #103820;
+  --arv-forest-800: #0C2C19;
+
+  --arv-ember-50: #FDF3EC;
+  --arv-ember-100: #FAE1D0;
+  --arv-ember-200: #F4C1A1;
+  --arv-ember-300: #EC9E70;
+  --arv-ember-400: #E28249;
+  --arv-ember-500: #D8662A;
+  --arv-ember-600: #B44F1E;
+  --arv-ember-700: #8C3C16;
+  --arv-ember-800: #5C280F;
+
+  --arv-copper-50: #FBF6EE;
+  --arv-copper-100: #F3E7CF;
+  --arv-copper-200: #E6CE9F;
+  --arv-copper-300: #D6B270;
+  --arv-copper-400: #CC9E58;
+  --arv-copper-500: #C28B45;
+  --arv-copper-600: #A27134;
+  --arv-copper-700: #7C5626;
+  --arv-copper-800: #4E3617;
+
+  --arv-amber-50: #FEF8EE;
+  --arv-amber-100: #FCEBCF;
+  --arv-amber-200: #F7D69F;
+  --arv-amber-300: #F0BF6F;
+  --arv-amber-400: #EAB25C;
+  --arv-amber-500: #E5A64A;
+  --arv-amber-600: #C08334;
+  --arv-amber-700: #906025;
+  --arv-amber-800: #5C3D17;
+
+  --arv-sand-50: #F8F7F4;
+  --arv-sand-100: #F0EEE9;
+  --arv-sand-200: #E5E2DB;
+  --arv-sand-300: #CFCBC2;
+  --arv-sand-400: #AAA69C;
+  --arv-sand-500: #837F75;
+  --arv-sand-600: #5C5952;
+  --arv-sand-700: #444139;
+  --arv-sand-800: #2E2E2E;
+
+  --arv-success: #2F7D4F;
+  --arv-success-bg: #EAF4EE;
+  --arv-warning: #E5A64A;
+  --arv-warning-bg: #FDF4E4;
+  --arv-error: #B5372A;
+  --arv-error-bg: #FBECEA;
+  --arv-info: #2F6F8F;
+  --arv-info-bg: #EAF1F5;
+
+  --arv-viz-1: #23573A;
+  --arv-viz-2: #D8662A;
+  --arv-viz-3: #C28B45;
+  --arv-viz-4: #2F7D74;
+  --arv-viz-5: #5E9673;
+  --arv-viz-6: #4A5A66;
+  --arv-viz-7: #EC9E70;
+  --arv-viz-8: #BAD5C3;
+
+  --arv-dark-bg: #0B120E;
+  --arv-dark-surface: #131C16;
+  --arv-dark-elevated: #1C2721;
+  --arv-dark-border: #2A3830;
+  --arv-dark-text: #E8EDE9;
+  --arv-dark-muted: #9FB0A6;
+
+  /* semantic aliases */
+  --arv-brand: var(--arv-forest-700);
+  --arv-accent: var(--arv-ember-500);
+  --arv-bg: var(--arv-sand-50);
+  --arv-surface: #FFFFFF;
+  --arv-border: var(--arv-sand-200);
+  --arv-text: var(--arv-sand-900);
+  --arv-text-muted: var(--arv-sand-600);
+
+  /* type */
+  --arv-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --arv-font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --arv-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* spacing — 8px grid */
+  --arv-space-1: 4px;  --arv-space-2: 8px;  --arv-space-3: 12px;
+  --arv-space-4: 16px; --arv-space-6: 24px; --arv-space-8: 32px;
+  --arv-space-12: 48px; --arv-space-16: 64px; --arv-space-24: 96px;
+
+  /* radius — the system is square */
+  --arv-radius: 0px;
+
+  /* control heights */
+  --arv-control-sm: 32px; --arv-control-md: 44px; --arv-control-lg: 56px;
+}

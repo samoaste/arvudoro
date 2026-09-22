@@ -1,0 +1,12 @@
+.rig-limb,.rig-torso{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rig-near .rig-limb{stroke:#E8EDE9;stroke-width:9}
+.rig-far .rig-limb{stroke:#5E9673;stroke-width:9}
+.rig-torso{stroke:#E8EDE9;stroke-width:13}
+.rig-head{fill:#E8EDE9}
+.rig-ground{stroke:#2A3830;stroke-width:3}
+.rig-post{fill:none;stroke:#444139;stroke-width:5}
+.rig-bar{fill:#C28B45}
+.rig-db-handle{stroke:#C28B45;stroke-width:4}
+.rig-db-plate{fill:#C28B45}
+.rig-far .rig-db-plate{fill:#7C5626}.rig-far .rig-db-handle{stroke:#7C5626}
+.rig-rope{fill:none;stroke:#D8662A;stroke-width:2.5}

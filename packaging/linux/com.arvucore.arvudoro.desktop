@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Arvudoro
+GenericName=Pomodoro Timer
+Comment=Pomodoro timer with active exercise breaks
+Comment[pt_BR]=Timer pomodoro com pausas de exercício
+Exec=arvudoro
+Icon=com.arvucore.arvudoro
+Terminal=false
+Categories=Utility;Clock;
+Keywords=pomodoro;timer;focus;exercise;fitness;workout;productivity;foco;exercício;
+StartupWMClass=com.arvucore.arvudoro

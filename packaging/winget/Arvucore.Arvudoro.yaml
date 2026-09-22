@@ -1,0 +1,26 @@
+# winget manifest (singleton format). Fill InstallerSha256 from SHA256SUMS.txt
+# of the release, validate with `winget validate`, then open a PR to
+# https://github.com/microsoft/winget-pkgs under manifests/a/Arvucore/Arvudoro/<version>/
+# (or run `wingetcreate new <zip url>`, which generates the split manifests).
+PackageIdentifier: Arvucore.Arvudoro
+PackageVersion: 0.1.0
+PackageLocale: en-US
+Publisher: Arvucore
+PublisherUrl: https://github.com/samoaste
+PackageName: Arvudoro
+PackageUrl: https://github.com/samoaste/arvudoro
+License: MIT
+LicenseUrl: https://github.com/samoaste/arvudoro/blob/main/LICENSE
+ShortDescription: Pomodoro timer with active breaks - compound exercises with animated demos.
+Tags: [pomodoro, timer, focus, exercise, fitness, productivity]
+Installers:
+  - Architecture: x64
+    InstallerType: zip
+    NestedInstallerType: portable
+    NestedInstallerFiles:
+      - RelativeFilePath: arvudoro\arvudoro.exe
+        PortableCommandAlias: arvudoro
+    InstallerUrl: https://github.com/samoaste/arvudoro/releases/download/v0.1.0/arvudoro-0.1.0-win.zip
+    InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
+ManifestType: singleton
+ManifestVersion: 1.6.0

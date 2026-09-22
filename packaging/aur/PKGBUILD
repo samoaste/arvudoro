@@ -1,0 +1,36 @@
+# Maintainer: samoaste <https://github.com/samoaste>
+# AUR package "arvudoro-bin": repackages the GitHub release tarball.
+# Update pkgver + sha256sums on each release (updpkgsums), then
+# makepkg --printsrcinfo > .SRCINFO and push to aur.archlinux.org.
+pkgname=arvudoro-bin
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Pomodoro timer with active breaks: compound exercises with animated demos'
+arch=('x86_64' 'aarch64')
+url='https://github.com/samoaste/arvudoro'
+license=('MIT')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator')
+optdepends=('pipewire: sound effects')
+provides=('arvudoro')
+conflicts=('arvudoro')
+source_x86_64=("$url/releases/download/v$pkgver/arvudoro-$pkgver-linux-x86_64.tar.gz")
+source_aarch64=("$url/releases/download/v$pkgver/arvudoro-$pkgver-linux-arm64.tar.gz")
+sha256sums_x86_64=('SKIP')
+sha256sums_aarch64=('SKIP')
+
+package() {
+  install -d "$pkgdir/opt/arvudoro" "$pkgdir/usr/bin"
+  cp -a arvudoro/. "$pkgdir/opt/arvudoro/"
+  ln -s /opt/arvudoro/arvudoro "$pkgdir/usr/bin/arvudoro"
+  install -Dm644 arvudoro/icon.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/arvudoro.png"
+  install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/arvudoro.desktop" <<DESKTOP
+[Desktop Entry]
+Type=Application
+Name=Arvudoro
+Comment=Pomodoro timer with active breaks
+Exec=arvudoro
+Icon=arvudoro
+Categories=Utility;Clock;
+StartupWMClass=com.arvucore.arvudoro
+DESKTOP
+}

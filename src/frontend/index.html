@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arvudoro</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="colors.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 180 180" aria-hidden="true">
+      <circle cx="90" cy="90" r="66" fill="none" stroke="currentColor" stroke-width="15" stroke-dasharray="88 26" transform="rotate(-45 90 90)"/>
+      <circle class="mark-core" cx="90" cy="90" r="27"/>
+    </svg>
+    <span class="wordmark">Arvudoro</span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" data-view="timer" role="tab" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9.5 2.5h5"/></svg>
+      <span class="sr" data-i18n="timer">Timer</span>
+    </button>
+    <button class="tab" data-view="stats" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg>
+      <span class="sr" data-i18n="stats">Stats</span>
+    </button>
+    <button class="tab" data-view="settings" role="tab" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+      <span class="sr" data-i18n="settings">Settings</span>
+    </button>
+  </nav>
+</header>
+
+<main>
+  <!-- ── timer ─────────────────────────────────────────────────────────── -->
+  <section class="view" id="view-timer">
+    <div class="focus-pane" id="focusPane">
+      <p class="eyebrow" id="phaseLabel">Focus</p>
+      <div class="dial">
+        <svg viewBox="0 0 200 200" class="dial-svg" aria-hidden="true">
+          <circle class="dial-track" cx="100" cy="100" r="88"/>
+          <circle class="dial-fill" id="dialFill" cx="100" cy="100" r="88"/>
+        </svg>
+        <div class="dial-center">
+          <div class="time" id="time" role="timer" aria-live="off">25:00</div>
+          <div class="round" id="roundLabel">Round 1 of 4</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="icon-btn" id="restartBtn" data-i18n-title="restart">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4"/></svg>
+        </button>
+        <button class="primary" id="toggleBtn">Start</button>
+        <button class="icon-btn" id="skipBtn" data-i18n-title="skip">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l10 7-10 7zM19 5v14"/></svg>
+        </button>
+      </div>
+      <button class="next-card" id="nextCard" type="button">
+        <span class="eyebrow" id="nextLabel">Next break</span>
+        <span class="next-name" id="nextName">—</span>
+      </button>
+    </div>
+
+    <div class="break-pane" id="breakPane" hidden>
+      <div class="break-bar">
+        <div class="break-bar-text">
+          <span class="eyebrow" id="breakPhaseLabel">Short break</span>
+          <span class="time-sm" id="timeSm">05:00</span>
+        </div>
+        <div class="break-bar-actions">
+          <button class="icon-btn sm" id="toggleSmBtn" data-i18n-title="pause">
+            <svg viewBox="0 0 24 24" aria-hidden="true" id="toggleSmIcon"><path d="M8 5v14M16 5v14"/></svg>
+          </button>
+          <button class="icon-btn sm" id="skipSmBtn" data-i18n-title="skip">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l10 7-10 7zM19 5v14"/></svg>
+          </button>
+        </div>
+        <div class="progress"><div class="progress-fill" id="breakProgress"></div></div>
+      </div>
+
+      <div class="exercise" id="exercise">
+        <div class="ex-head">
+          <span class="eyebrow" id="exStep"></span>
+          <span class="chip" id="exGroup"></span>
+        </div>
+        <svg class="rig" id="rig" role="img" aria-labelledby="exName" data-aspect="1.9"></svg>
+        <h2 class="ex-name" id="exName"></h2>
+        <p class="ex-dose" id="exDose"></p>
+        <ol class="ex-cues" id="exCues"></ol>
+        <div class="sets" id="sets" aria-live="polite"></div>
+        <p class="ex-status" id="exStatus"></p>
+        <div class="ex-actions">
+          <button class="secondary" id="swapBtn" data-i18n="swap">Swap</button>
+          <button class="primary" id="setBtn">Set done</button>
+        </div>
+        <p class="ex-next" id="exNext" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── stats ─────────────────────────────────────────────────────────── -->
+  <section class="view" id="view-stats" hidden>
+    <p class="eyebrow" data-i18n="today">Today</p>
+    <div class="tiles" id="todayTiles"></div>
+    <div class="chart-block">
+      <h3 class="chart-title" data-i18n="pomodorosPerDay">Pomodoros per day</h3>
+      <div class="bars" id="chartFocus"></div>
+    </div>
+    <div class="chart-block">
+      <h3 class="chart-title" data-i18n="exercisesPerDay">Exercises per day</h3>
+      <div class="bars" id="chartMoves"></div>
+    </div>
+    <p class="eyebrow" data-i18n="topExercises">Most done</p>
+    <ol class="top-list" id="topList"></ol>
+    <p class="eyebrow" data-i18n="allTime">All time</p>
+    <div class="tiles" id="totalTiles"></div>
+    <button class="link-danger" id="clearStats" data-i18n="clearStats">Clear history</button>
+    <div class="tooltip" id="tooltip" hidden></div>
+  </section>
+
+  <!-- ── settings ──────────────────────────────────────────────────────── -->
+  <section class="view" id="view-settings" hidden>
+    <form id="settingsForm" onsubmit="return false"></form>
+    <div class="about" id="about">
+      <p class="eyebrow" data-i18n="sAbout">About</p>
+      <div class="about-brand">
+        <img src="icon.png" alt="" width="48" height="48">
+        <div>
+          <strong>Arvudoro</strong>
+          <span class="muted" id="version"></span>
+        </div>
+      </div>
+      <p data-i18n="aboutText"></p>
+      <p id="aboutBy"></p>
+      <p class="muted" data-i18n="healthNote"></p>
+      <p class="links">
+        <a href="https://github.com/samoaste" data-external>github.com/samoaste</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

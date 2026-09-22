@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Rig preview</title>
+<style>
+body{background:#0B120E;color:#E8EDE9;font:13px system-ui;margin:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.card{background:#131C16;border:1px solid #2A3830;padding:8px}
+svg{width:100%;aspect-ratio:1;display:block}
+.rig-limb,.rig-torso{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rig-near .rig-limb{stroke:#E8EDE9;stroke-width:9}
+.rig-far .rig-limb{stroke:#5E9673;stroke-width:9}
+.rig-torso{stroke:#E8EDE9;stroke-width:13}
+.rig-head{fill:#E8EDE9}
+.rig-ground{stroke:#2A3830;stroke-width:3}
+.rig-post{fill:none;stroke:#444139;stroke-width:5}
+.rig-bar{fill:#C28B45}
+.rig-db-handle{stroke:#C28B45;stroke-width:4}
+.rig-db-plate{fill:#C28B45}
+.rig-far .rig-db-plate{fill:#7C5626}.rig-far .rig-db-handle{stroke:#7C5626}
+.rig-rope{fill:none;stroke:#D8662A;stroke-width:2.5}
+</style></head><body>
+<label>frame time ms: <input id="t" type="range" min="0" max="8000" value="0" style="width:400px"> <span id="tv"></span></label>
+<label><input type="checkbox" id="play" checked> play</label>
+<div class="grid" id="g"></div>
+<script type="module">
+import { Figure } from '../src/frontend/rig.js';
+import { EXERCISES } from '../src/frontend/exercises.js';
+const figs=[];
+for(const ex of EXERCISES){
+  const c=document.createElement('div');c.className='card';
+  c.innerHTML=`<div>${ex.id}</div>`;
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');c.append(svg);
+  document.getElementById('g').append(c);
+  const f=new Figure(svg);f.load(ex);figs.push(f);
+}
+const sel=new URLSearchParams(location.search).get('t');
+function playAll(){figs.forEach(f=>f.play())}
+if(sel!=null){figs.forEach(f=>f.draw(+sel));document.getElementById('play').checked=false}else playAll();
+document.getElementById('t').oninput=e=>{document.getElementById('play').checked=false;figs.forEach(f=>{f.stop();f.draw(+e.target.value)});document.getElementById('tv').textContent=e.target.value};
+document.getElementById('play').onchange=e=>e.target.checked?playAll():figs.forEach(f=>f.stop());
+</script></body></html>

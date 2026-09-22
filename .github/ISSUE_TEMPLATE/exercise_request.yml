@@ -1,0 +1,45 @@
+name: Exercise suggestion
+description: Propose a compound exercise for the break rotation
+labels: [exercise]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Arvudoro only includes **compound** moves (several joints and muscle groups) that need at most dumbbells, a pull-up bar, a jump rope or bodyweight.
+  - type: input
+    id: name
+    attributes:
+      label: Exercise name
+      placeholder: Turkish get-up
+    validations:
+      required: true
+  - type: dropdown
+    id: equipment
+    attributes:
+      label: Equipment
+      options: [Dumbbells, Pull-up bar, Jump rope, Bodyweight]
+    validations:
+      required: true
+  - type: dropdown
+    id: group
+    attributes:
+      label: Main focus
+      options: [Full body, Legs, Upper body, Posterior chain, Core, Cardio]
+    validations:
+      required: true
+  - type: textarea
+    id: how
+    attributes:
+      label: How it's done
+      description: Starting position, the movement, and the key form cues.
+    validations:
+      required: true
+  - type: input
+    id: dose
+    attributes:
+      label: Suggested dose for a 5-minute break
+      placeholder: 3 × 8 each side
+  - type: input
+    id: ref
+    attributes:
+      label: Reference video or article

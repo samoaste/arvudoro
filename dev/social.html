@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Social preview</title>
+<link rel="stylesheet" href="../src/frontend/fonts.css">
+<link rel="stylesheet" href="../src/frontend/colors.css">
+<link rel="stylesheet" href="../src/frontend/style.css">
+<style>
+/* 1280x640 GitHub social preview — render with dev/make-social.sh */
+html,body{height:auto;overflow:hidden;display:block}
+body{margin:0;width:1280px;height:640px;background:var(--arv-forest-800);position:relative}
+.wrap{position:absolute;inset:0;display:grid;grid-template-columns:1fr 520px;align-items:center;padding:0 80px;gap:40px}
+.brand{display:flex;align-items:center;gap:18px;color:var(--arv-sand-50)}
+.brand svg{width:64px;height:64px}
+.brand b{font:700 64px/1 var(--arv-font-display);letter-spacing:-0.02em}
+h1{font:500 40px/1.15 var(--arv-font-display);color:var(--arv-sand-50);margin:36px 0 20px;letter-spacing:-0.01em}
+p{font:400 22px/1.45 var(--arv-font-body);color:var(--arv-forest-200)}
+.tags{margin-top:34px;font:500 15px/1 var(--arv-font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--arv-forest-300)}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.figs svg{width:252px;height:230px;background:var(--arv-dark-surface);border:1px solid var(--arv-dark-border)}
+</style></head><body>
+<div class="wrap">
+  <div>
+    <div class="brand">
+      <svg viewBox="0 0 180 180"><circle cx="90" cy="90" r="66" fill="none" stroke="currentColor" stroke-width="15" stroke-dasharray="88 26" transform="rotate(-45 90 90)"/><circle cx="90" cy="90" r="27" fill="#D8662A"/></svg>
+      <b>Arvudoro</b>
+    </div>
+    <h1>The pomodoro timer<br>whose breaks make you move.</h1>
+    <p>Compound exercises with animated demos, for dumbbells, a pull-up bar, a jump rope or just your body.</p>
+    <div class="tags">Free · Open source · Linux · macOS · Windows</div>
+  </div>
+  <div class="figs" id="figs"></div>
+</div>
+<script type="module">
+import { Figure } from '../src/frontend/rig.js';
+import { EXERCISES } from '../src/frontend/exercises.js';
+const picks=[['squat-press',1500],['gorilla-row',700],['burpee',1250],['chin-up',1900]];
+for(const [id,t] of picks){
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.dataset.aspect='1.1';
+  document.getElementById('figs').append(svg);
+  const f=new Figure(svg);f.load(EXERCISES.find(e=>e.id===id));f.draw(t);
+}
+</script></body></html>

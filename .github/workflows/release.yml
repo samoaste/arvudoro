@@ -1,0 +1,77 @@
+# Tag a version (git tag v0.1.0 && git push --tags) to build Arvudoro on every
+# OS tinyjs supports and publish a GitHub Release. The merged manifest.json
+# is what installed apps poll for auto-update (tinyjs.json "update.url").
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+env:
+  TINYJS_VERSION: v0.40.0
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-24.04, id: linux-x86_64 }
+          - { os: ubuntu-24.04-arm, id: linux-arm64 }
+          - { os: macos-latest, id: macos }
+          - { os: windows-latest, id: windows }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tinyjs (unix)
+        if: runner.os != 'Windows'
+        run: |
+          curl -fsSL https://tinyjs.app/install | sh
+          echo "$HOME/.tinyjs" >> "$GITHUB_PATH"
+
+      - name: Install tinyjs (windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          irm https://tinyjs.app/install.ps1 | iex
+          "$env:LOCALAPPDATA\tinyjs" | Out-File -FilePath $env:GITHUB_PATH -Append
+
+      - name: Test
+        run: npm test
+
+      - name: Publish
+        run: tinyjs publish --notes-file CHANGELOG.md
+
+      - name: Disk image (macOS)
+        if: runner.os == 'macOS'
+        run: tinyjs build --dmg && cp dist/*.dmg dist/publish/ || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.id }}
+          path: dist/publish/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Merge manifests
+        run: |
+          mkdir -p out
+          jq -s 'reduce .[] as $m ({}; . * $m)' artifacts/*/manifest.json > out/manifest.json
+          find artifacts -type f ! -name manifest.json -exec cp {} out/ \;
+          (cd out && sha256sum * > SHA256SUMS.txt)
+          cat out/manifest.json
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" out/* --title "Arvudoro $GITHUB_REF_NAME" --notes-file CHANGELOG.md

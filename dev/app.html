@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<!-- The real UI with a mocked tiny bridge, for plain browsers:
+     python3 -m http.server 8765, then /dev/app.html?phase=short&lang=pt&theme=light&view=stats -->
+<script>
+fetch('../src/frontend/index.html').then((r) => r.text()).then((html) => {
+  html = html.replace('<head>', '<head><base href="../src/frontend/"><script src="../../dev/mock-tiny.js"><\/script>');
+  document.open(); document.write(html); document.close();
+});
+</script>

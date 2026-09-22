@@ -1,0 +1,17 @@
+{
+  "name": "arvudoro",
+  "title": "Arvudoro",
+  "size": "400x680",
+  "id": "com.arvucore.arvudoro",
+  "version": "0.1.0",
+  "icon": "icon.png",
+  "minTinyjsVersion": "0.40.0",
+  "contextMenu": false,
+  "update": {
+    "url": "https://github.com/samoaste/arvudoro/releases/latest/download/manifest.json",
+    "auto": "daily"
+  },
+  "chrome": {
+    "menu": false
+  }
+}

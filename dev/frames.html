@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Rig frames</title>
+<link rel="stylesheet" href="../src/frontend/fonts.css">
+<link rel="stylesheet" href="../src/frontend/colors.css">
+<link rel="stylesheet" href="../src/frontend/style.css">
+<style>
+/* One row per animation frame, one cell per exercise; sliced into a GIF by dev/make-gif.py */
+html,body{height:auto;overflow:visible;display:block}
+body{margin:0;background:var(--bg)}
+.row{display:flex;gap:0;height:260px}
+.cell{width:240px;height:260px;display:flex;flex-direction:column;align-items:center;padding:10px 10px 0}
+.cell svg{width:220px;height:200px;background:var(--surface);border:1px solid var(--border)}
+.cell span{font:500 14px/1 var(--arv-font-display);color:var(--text);margin-top:12px}
+</style></head><body>
+<script type="module">
+import { Figure } from '../src/frontend/rig.js';
+import { EXERCISES } from '../src/frontend/exercises.js';
+const q=new URLSearchParams(location.search);
+const ids=q.get('ids').split(',');const n=+q.get('n');const dt=+q.get('dt');
+for(let i=0;i<n;i++){
+  const row=document.createElement('div');row.className='row';document.body.append(row);
+  for(const id of ids){
+    const ex=EXERCISES.find(e=>e.id===id);
+    const cell=document.createElement('div');cell.className='cell';
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.dataset.aspect='1.1';
+    cell.append(svg);const s=document.createElement('span');s.textContent=ex.name.en;cell.append(s);row.append(cell);
+    const f=new Figure(svg);f.load(ex);f.draw(i*dt);
+  }
+}
+</script></body></html>

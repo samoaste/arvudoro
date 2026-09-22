@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Validate AppStream metadata
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq appstream desktop-file-utils >/dev/null
+          appstreamcli validate --no-net packaging/linux/com.arvucore.arvudoro.metainfo.xml
+          desktop-file-validate packaging/linux/com.arvucore.arvudoro.desktop
+
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tinyjs
+        run: |
+          curl -fsSL https://tinyjs.app/install | sh
+          echo "$HOME/.tinyjs" >> "$GITHUB_PATH"
+      - run: tinyjs build
