@@ -1,0 +1,6 @@
+# LF everywhere, including Windows CI checkouts (release notes come from CHANGELOG.md)
+* text=auto eol=lf
+*.png binary
+*.gif binary
+*.wav binary
+*.woff2 binary

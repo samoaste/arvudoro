@@ -45,17 +45,23 @@ jobs:
       - name: Test
         run: npm test
 
+      # build wipes dist/, so the disk image is made first and set aside
+      - name: Disk image (macOS)
+        if: runner.os == 'macOS'
+        run: tinyjs build --dmg && mkdir -p .dmg && cp dist/*.dmg .dmg/
+
       - name: Publish
         run: tinyjs publish --notes-file CHANGELOG.md
 
-      - name: Disk image (macOS)
+      - name: Attach disk image (macOS)
         if: runner.os == 'macOS'
-        run: tinyjs build --dmg && cp dist/*.dmg dist/publish/ || true
+        run: cp .dmg/*.dmg dist/publish/
 
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.id }}
           path: dist/publish/*
+          if-no-files-found: error
 
   release:
     needs: build
@@ -70,6 +76,7 @@ jobs:
       - name: Merge manifests
         run: |
           mkdir -p out
+          test -f artifacts/macos/manifest.json   # every platform must be present
           jq -s 'reduce .[] as $m ({}; . * $m)' artifacts/*/manifest.json > out/manifest.json
           find artifacts -type f ! -name manifest.json -exec cp {} out/ \;
           (cd out && sha256sum * > SHA256SUMS.txt)
