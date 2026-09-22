@@ -7,7 +7,7 @@ const settings = {
   autoStartOnLaunch: false, alwaysOnTop: false, notifications: true, minimizeToTrayOnClose: true,
   startMinimized: false, launchAtLogin: false, showOnBreak: true, muted: false, volume: 80,
   tickWork: false, tickBreak: false, theme: q.get('theme') || 'system', language: q.get('lang') || 'auto',
-  equipment: ['dumbbell', 'bar', 'rope', 'body'], circuitSize: 3,
+  equipment: q.get('eq') ? q.get('eq').split(',') : ['dumbbell', 'bar', 'rope', 'body'], circuitSize: 3,
 };
 const phase = q.get('phase') || 'focus';
 const total = 60000 * (phase === 'focus' ? 25 : phase === 'short' ? 5 : 15);
@@ -41,3 +41,20 @@ window.tiny = {
 };
 
 if (q.get('view')) setTimeout(() => document.querySelector(`.tab[data-view="${q.get('view')}"]`)?.click(), 400);
+// ?choose=1 — keep pressing "set done" until the next-exercise chooser shows
+if (q.get('choose')) {
+  const iv = setInterval(() => {
+    const btn = document.getElementById('setBtn');
+    if (!document.getElementById('chooser')?.hidden) { clearInterval(iv); return; }
+    if (btn && !btn.disabled && !btn.closest('[hidden]')) btn.click();
+  }, 300);
+}
+
+// ?clicks=N — press "set done" N times; &reset=1 — then press Reset
+if (q.get('clicks')) {
+  setTimeout(() => {
+    for (let i = 0; i < +q.get('clicks'); i++) document.getElementById('setBtn').click();
+    if (q.get('reset')) setTimeout(() => document.getElementById('swapBtn').click(), 200);
+    setTimeout(() => console.log('STATE', document.getElementById('swapBtn').textContent, document.getElementById('exStatus').textContent), 500);
+  }, 800);
+}

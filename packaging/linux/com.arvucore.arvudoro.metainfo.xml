@@ -11,11 +11,12 @@
     <name>Arvucore</name>
   </developer>
   <description>
-    <p>Arvudoro is a pomodoro timer with active breaks. Each break brings one compound exercise, animated step by step, that you can do with dumbbells, a pull-up bar, a jump rope or just your body. Long breaks become a short circuit.</p>
-    <p xml:lang="pt-BR">O Arvudoro é um timer pomodoro com pausas ativas. Cada pausa traz um exercício composto, animado passo a passo, que você faz com halteres, barra fixa, corda de pular ou o próprio corpo. A pausa longa vira um circuito curto.</p>
+    <p>Arvudoro is a pomodoro timer with active breaks. Each break brings one compound exercise, animated step by step, that you can do with dumbbells, a pull-up bar, a jump rope or just your body. Finish your sets, pick the next move, and keep going until the break ends.</p>
+    <p xml:lang="pt-BR">O Arvudoro é um timer pomodoro com pausas ativas. Cada pausa traz um exercício composto, animado passo a passo, que você faz com halteres, barra fixa, corda de pular ou o próprio corpo. Terminou as séries, escolhe o próximo e segue até a pausa acabar.</p>
     <ul>
       <li>Focus, short break, long break and rounds, with tray icon, notifications and sounds</li>
       <li>21 compound exercises with animated demonstrations and form cues</li>
+      <li>Pick the next exercise after each one and chain moves until the break ends</li>
       <li>Rotation that avoids repeats and alternates muscle groups</li>
       <li>Stats: pomodoros, exercises, reps and day streak</li>
       <li>No account, no telemetry: everything stays on your computer</li>
@@ -26,7 +27,7 @@
   <url type="bugtracker">https://github.com/samoaste/arvudoro/issues</url>
   <url type="vcs-browser">https://github.com/samoaste/arvudoro</url>
   <url type="contribute">https://github.com/samoaste/arvudoro/blob/main/CONTRIBUTING.md</url>
-  <url type="donation">https://github.com/sponsors/samoaste</url>
+  <url type="donation">https://buymeacoffee.com/samoaste</url>
   <screenshots>
     <screenshot type="default">
       <caption>A break with an animated exercise</caption>

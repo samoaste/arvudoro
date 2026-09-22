@@ -12,8 +12,8 @@
 </p>
 
 Cada pausa traz um exercício composto, animado passo a passo, que você faz com
-halteres, barra fixa, corda de pular ou o próprio corpo. A pausa longa vira um
-circuito curto. Gratuito e de código aberto, feito pela [Arvucore](https://github.com/samoaste).
+halteres, barra fixa, corda de pular ou o próprio corpo. Terminou as séries,
+escolhe o próximo e segue até a pausa acabar. Gratuito e de código aberto, feito pela [Arvucore](https://github.com/samoaste).
 
 <p align="center">
   <img src="docs/demo.gif" alt="Demonstrações animadas de agachamento com desenvolvimento, remada gorila, burpee e pular corda" width="720">
@@ -21,6 +21,7 @@ circuito curto. Gratuito e de código aberto, feito pela [Arvucore](https://gith
 
 <p align="center">
   <img src="docs/screenshots/break-pt.png" width="240" alt="Pausa longa com circuito">
+  <img src="docs/screenshots/chooser-pt.png" width="240" alt="Escolhendo o próximo exercício">
 </p>
 
 ## Recursos
@@ -32,6 +33,9 @@ circuito curto. Gratuito e de código aberto, feito pela [Arvucore](https://gith
   thruster, man maker, burpee, barra + elevação de joelhos, pular corda…),
   cada um com animação, séries × repetições ou séries por tempo, e dicas de
   execução.
+- **Sem parar**: ao terminar um exercício, você escolhe o próximo entre três
+  sugestões animadas e emenda um no outro até a pausa acabar. Na pausa longa,
+  a primeira sugestão segue o circuito.
 - **Rodízio inteligente**: nunca repete o exercício em sequência nem o mesmo
   grupo muscular em pausas seguidas, e só sorteia exercícios dos equipamentos
   que você tem.
@@ -42,7 +46,7 @@ circuito curto. Gratuito e de código aberto, feito pela [Arvucore](https://gith
   ([privacidade](PRIVACY.md)).
 
 Atalhos: <kbd>Espaço</kbd> inicia/pausa · <kbd>S</kbd> pula · <kbd>R</kbd>
-reinicia a etapa · <kbd>Enter</kbd> marca a série · <kbd>Ctrl</kbd>+<kbd>1</kbd>/<kbd>2</kbd>/<kbd>,</kbd>
+reinicia a etapa · <kbd>Enter</kbd> marca a série · <kbd>1</kbd>–<kbd>3</kbd> escolhe o próximo exercício · <kbd>Ctrl</kbd>+<kbd>1</kbd>/<kbd>2</kbd>/<kbd>,</kbd>
 timer, estatísticas, ajustes.
 
 ## Download
@@ -71,6 +75,11 @@ tinyjs build     # empacota para o sistema atual
 
 Adicionar um exercício é adicionar dados, não desenhar. Veja o
 [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Apoie
+
+O Arvudoro é gratuito. Se ele te ajuda a se mexer, você pode
+[me pagar um café](https://buymeacoffee.com/samoaste).
 
 ## Aviso de saúde
 

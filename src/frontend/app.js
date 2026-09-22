@@ -93,19 +93,53 @@ async function ensurePlan() {
 
 // ── break session ───────────────────────────────────────────────────────────
 
+// A break is open-ended: one exercise at a time, and after its last set the
+// user picks the next from a few suggestions, until the break ends. On long
+// breaks the planned circuit leads the suggestions (session.queue).
 async function startBreak() {
   await ensurePlan();
-  const ids = plan.ids.slice();
-  if (!ids.length) {
-    session = { ids: [], idx: 0, done: [], logged: [] };
-    renderBreak();
-    return;
-  }
-  session = { ids, idx: 0, done: ids.map(() => 0), logged: ids.map(() => false), timer: null };
-  recent = [...ids, ...recent.filter((id) => !ids.includes(id))].slice(0, 12);
+  const planned = plan.ids.slice();
+  session = { ids: [], idx: -1, done: [], logged: [], queue: planned.slice(1), choosing: false, choices: [], timer: null };
   plan = null;
-  await store('recent', recent);
   await store('plan', null);
+  if (planned.length) await beginExercise(planned[0]);
+  else renderBreak();
+}
+
+async function beginExercise(id) {
+  session.ids.push(id);
+  session.done.push(0);
+  session.logged.push(false);
+  session.idx = session.ids.length - 1;
+  session.queue = session.queue.filter((q) => q !== id);
+  session.choosing = false;
+  recent = [id, ...recent.filter((x) => x !== id)].slice(0, 12);
+  await store('recent', recent);
+  renderBreak();
+}
+
+// Three options: the next planned circuit move first (if any), then fresh picks
+// that skip everything already done this break.
+function buildChoices(skip = []) {
+  const allowed = new Set(pool().map((e) => e.id));
+  const lead = session.queue.filter((id) => allowed.has(id) && !skip.includes(id)).slice(0, 1);
+  const rest = pickExercises(3 - lead.length, [...session.ids, ...lead, ...skip]);
+  return [...lead, ...rest];
+}
+
+function openChooser() {
+  if (!session) return;
+  session.choosing = true;
+  session.choices = buildChoices();
+  renderBreak();
+}
+
+function moreChoices() {
+  if (!session?.choosing) return;
+  const shown = session.choices;
+  let next = buildChoices(shown);
+  if (!next.length) next = buildChoices();   // pool exhausted: start over
+  session.choices = next;
   renderBreak();
 }
 
@@ -125,6 +159,8 @@ function endBreak() {
   session.ids.forEach((_, i) => logProgress(i));
   session = null;
   figure.stop();
+  minis.forEach((m) => m.stop());
+  minis = [];
 }
 
 function stopSetTimer() {
@@ -136,13 +172,12 @@ function markSet() {
   const ex = byId(session.ids[i]);
   session.done[i] = Math.min(ex.sets, session.done[i] + 1);
   sound.play('set-done', 0.7);
+  renderBreak();
   if (session.done[i] >= ex.sets) {
     logProgress(i);
-    if (i < session.ids.length - 1) {
-      setTimeout(() => { if (session && session.idx === i) { session.idx++; renderBreak(); } }, 900);
-    }
+    // let the last set dot fill in, then offer what's next
+    setTimeout(() => { if (session && session.idx === i && !session.choosing) openChooser(); }, 700);
   }
-  renderBreak();
 }
 
 function onSetButton() {
@@ -158,18 +193,24 @@ function onSetButton() {
       $('setBtn').textContent = `${Math.ceil(left / 1000)} ${t('secs')}`;
     };
     session.timer = setInterval(step, 200);
+    renderBreak();   // Swap becomes Reset while the timed set runs
     step();
-    $('setBtn').disabled = true;
   } else {
     markSet();
   }
 }
 
+function resetSets() {
+  if (!session || session.idx < 0 || session.choosing) return;
+  stopSetTimer();
+  session.done[session.idx] = 0;
+  renderBreak();
+}
+
 async function swapExercise() {
-  if (!session || session.timer) return;
+  if (!session || session.timer || session.idx < 0) return;
   const i = session.idx;
-  const others = session.ids.filter((_, k) => k !== i);
-  const [id] = pickExercises(1, [session.ids[i], ...others]);
+  const [id] = pickExercises(1, [...session.ids, ...session.queue]);
   if (!id || id === session.ids[i]) return;
   session.ids[i] = id;
   session.done[i] = 0;
@@ -222,13 +263,18 @@ function renderNext() {
 }
 
 let loadedId = null;
+let minis = [];
+
 function renderBreak() {
   if (!session) return;
-  if (!session.ids.length) {
-    $('exercise').hidden = true;
-    return;
-  }
-  $('exercise').hidden = false;
+  const choosing = session.choosing;
+  $('exercise').hidden = choosing || session.idx < 0;
+  $('chooser').hidden = !choosing;
+  if (choosing) { renderChooser(); return; }
+  minis.forEach((m) => m.stop());
+  minis = [];
+  if (session.idx < 0) return;
+
   const i = session.idx;
   const ex = byId(session.ids[i]);
   const lang = getLang();
@@ -239,14 +285,10 @@ function renderBreak() {
     loadedId = ex.id;
   }
 
-  $('exStep').textContent = session.ids.length > 1
-    ? t('circuitStep', { n: i + 1, total: session.ids.length })
-    : t(`eq_${ex.equipment}`);
+  $('exStep').textContent = t('exerciseN', { n: i + 1 });
   $('exGroup').textContent = t('groups')[ex.group] ?? ex.group;
   $('exName').textContent = exName(ex);
-  const unit = ex.mode === 'time' ? t('secs') : ` ${t('reps')}`;
-  $('exDose').textContent = t('sets', { sets: ex.sets, amount: `${ex.amount}${unit}` }) +
-    (ex.perSide ? ` · ${t('perSide')}` : '');
+  $('exDose').textContent = dose(ex);
   $('exCues').innerHTML = (ex.cues[lang] ?? ex.cues.en).map((c) => `<li>${esc(c)}</li>`).join('');
 
   const done = session.done[i];
@@ -254,18 +296,65 @@ function renderBreak() {
     `<span class="set-dot ${k < done ? 'done' : k === done ? 'active' : ''}"></span>`).join('');
 
   const finished = done >= ex.sets;
-  const allFinished = session.ids.every((id, k) => session.done[k] >= byId(id).sets);
   const btn = $('setBtn');
   btn.disabled = finished || !!session.timer;
   if (!session.timer) btn.textContent = ex.mode === 'time' ? t('startSet') : t('setDone');
-  $('swapBtn').disabled = done > 0 || !!session.timer;
-  $('exStatus').textContent = allFinished
-    ? t('allDone')
-    : finished ? '' : t('setOf', { n: done + 1, total: ex.sets });
+  // Swap before the first set; once a set is logged or a timed set is running
+  // the same button resets this exercise's sets, which frees Swap again.
+  const started = done > 0 || !!session.timer;
+  const alt = $('swapBtn');
+  alt.textContent = started ? t('resetSets') : t('swap');
+  alt.title = started ? t('resetSetsHint') : '';
+  alt.dataset.action = started ? 'reset' : 'swap';
+  alt.disabled = finished;
+  $('exStatus').textContent = finished ? t('allSetsDone') : t('setOf', { n: done + 1, total: ex.sets });
 
-  const next = session.ids[i + 1];
+  const next = session.queue[0];
   $('exNext').hidden = !next;
   if (next) $('exNext').textContent = `${t('nextUp')}: ${exName(byId(next))}`;
+}
+
+function dose(ex) {
+  const unit = ex.mode === 'time' ? t('secs') : ` ${t('reps')}`;
+  return t('sets', { sets: ex.sets, amount: `${ex.amount}${unit}` }) + (ex.perSide ? ` · ${t('perSide')}` : '');
+}
+
+function renderChooser() {
+  figure.stop();
+  minis.forEach((m) => m.stop());
+  const finished = session.done.filter((d, k) => d >= byId(session.ids[k]).sets).length;
+  $('chooserCount').textContent = t('doneThisBreak', { n: finished });
+  const box = $('choices');
+  if (!session.choices.length) {
+    box.innerHTML = `<p class="muted">${esc(t('noEquipment'))}</p>`;
+    minis = [];
+    return;
+  }
+  const hasLead = session.queue.includes(session.choices[0]);
+  box.innerHTML = session.choices.map((id, k) => {
+    const ex = byId(id);
+    const tag = k === 0 && hasLead ? `<span class="chip chip-accent">${esc(t('circuitNext'))}</span>` : '';
+    return `<button class="choice" data-id="${esc(id)}" type="button">
+      <svg class="choice-rig" data-aspect="1.35" aria-hidden="true"></svg>
+      <span class="choice-text">
+        <span class="choice-name">${esc(exName(ex))}</span>
+        <span class="choice-dose">${esc(dose(ex))}</span>
+        <span class="choice-tags"><span class="chip">${esc(t('groups')[ex.group] ?? ex.group)}</span>${tag}</span>
+      </span>
+      <kbd class="choice-key">${k + 1}</kbd>
+    </button>`;
+  }).join('');
+  minis = [...box.querySelectorAll('.choice-rig')].map((svg, k) => {
+    const f = new Figure(svg);
+    f.load(byId(session.choices[k]));
+    f.play();
+    return f;
+  });
+}
+
+function chooseAt(k) {
+  const id = session?.choosing && session.choices[k];
+  if (id) beginExercise(id);
 }
 
 function showView(v) {
@@ -274,7 +363,7 @@ function showView(v) {
   for (const s of document.querySelectorAll('.view')) s.hidden = s.id !== `view-${v}`;
   if (v === 'stats') renderStats();
   if (v === 'timer' && session) renderBreak();
-  if (v !== 'timer') figure.stop();
+  if (v !== 'timer') { figure.stop(); minis.forEach((m) => m.stop()); }
   $('tooltip').hidden = true;
 }
 
@@ -594,7 +683,8 @@ async function boot() {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (!session?.ids.length) return;
+      if (!session || session.idx < 0) return;
+      if (session.choosing) { renderChooser(); return; }
       figure.load(byId(session.ids[session.idx]));   // viewBox follows the new aspect
       figure.play();
     }, 150);
@@ -610,7 +700,13 @@ async function boot() {
   $('skipBtn').title = t('skip');
   $('skipSmBtn').title = t('skip');
   $('setBtn').addEventListener('click', onSetButton);
-  $('swapBtn').addEventListener('click', swapExercise);
+  $('swapBtn').addEventListener('click', (e) =>
+    e.currentTarget.dataset.action === 'reset' ? resetSets() : swapExercise());
+  $('moreBtn').addEventListener('click', moreChoices);
+  $('choices').addEventListener('click', (e) => {
+    const b = e.target.closest('.choice');
+    if (b) beginExercise(b.dataset.id);
+  });
   $('nextCard').addEventListener('click', async () => {
     // reroll the preview
     plan = null;
@@ -630,7 +726,8 @@ async function boot() {
     if (e.code === 'Space') { e.preventDefault(); tiny.api.call('toggle'); }
     else if (e.key === 's') tiny.api.call('skip');
     else if (e.key === 'r') tiny.api.call('reset');
-    else if (e.key === 'Enter' && session && view === 'timer') onSetButton();
+    else if (session?.choosing && view === 'timer' && /^[1-3]$/.test(e.key)) chooseAt(+e.key - 1);
+    else if (e.key === 'Enter' && session && view === 'timer') session.choosing ? chooseAt(0) : onSetButton();
   });
 
   renderTimer();
