@@ -28,6 +28,10 @@ jobs:
       - name: Install tinyjs (unix)
         if: runner.os != 'Windows'
         run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            # the installer refuses to run without the WebKitGTK runtime
+            sudo apt-get update -qq && sudo apt-get install -y -qq libwebkit2gtk-4.1-0 >/dev/null
+          fi
           curl -fsSL https://tinyjs.app/install | sh
           echo "$HOME/.tinyjs" >> "$GITHUB_PATH"
 
