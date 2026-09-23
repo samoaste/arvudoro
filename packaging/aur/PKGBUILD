@@ -3,7 +3,7 @@
 # Update pkgver + sha256sums on each release (updpkgsums), then
 # makepkg --printsrcinfo > .SRCINFO and push to aur.archlinux.org.
 pkgname=arvudoro-bin
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc='Pomodoro timer with active breaks: compound exercises with animated demos'
 arch=('x86_64' 'aarch64')

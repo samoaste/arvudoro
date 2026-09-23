@@ -3,7 +3,7 @@
   "title": "Arvudoro",
   "size": "400x680",
   "id": "com.arvucore.arvudoro",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "icon": "icon.png",
   "minTinyjsVersion": "0.40.0",
   "contextMenu": false,
