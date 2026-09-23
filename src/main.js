@@ -35,6 +35,8 @@ const STR = {
     breakDone: 'Break is over. Back to focus.',
     left: 'left', paused: 'paused',
     start: 'Start', pause: 'Pause', skip: 'Skip', show: 'Open Arvudoro', quit: 'Quit',
+    updateTo: 'Update to {v}', updateTitle: 'Arvudoro {v} is available',
+    updateBody: 'Open Arvudoro to update.',
   },
   pt: {
     focus: 'Foco', short: 'Pausa curta', long: 'Pausa longa',
@@ -42,6 +44,8 @@ const STR = {
     breakDone: 'Pausa encerrada. De volta ao foco.',
     left: 'restantes', paused: 'pausado',
     start: 'Iniciar', pause: 'Pausar', skip: 'Pular', show: 'Abrir Arvudoro', quit: 'Sair',
+    updateTo: 'Atualizar para {v}', updateTitle: 'Arvudoro {v} disponível',
+    updateBody: 'Abra o Arvudoro para atualizar.',
   },
 };
 
@@ -51,6 +55,10 @@ let lang = 'en';
 let frontendDir = null;
 let db = null;
 let firstRun = false;
+let update = null;   // { current, latest, notes } once a newer release is found
+// read now: once an update replaces the binary, /proc/self/exe says "(deleted)"
+const EXE = tjs.exePath;
+const IS_LINUX = /linux/i.test(globalThis.navigator?.platform ?? '');
 
 const timer = {
   phase: 'focus',  // focus | short | long
@@ -148,7 +156,7 @@ function applyWindowSettings() {
 
 // ── tray ────────────────────────────────────────────────────────────────────
 
-const t = (k) => (STR[lang] ?? STR.en)[k];
+const t = (k, v) => (STR[lang] ?? STR.en)[k].replace('{v}', v ?? '');
 const fmt = (ms) => {
   const s = Math.ceil(ms / 1000);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
@@ -164,7 +172,7 @@ function updateTray(force = false) {
   const icon = `${frontendDir}/tray/${timer.running ? kind : 'idle'}-${String(timer.running ? step : 0).padStart(2, '0')}.png`;
   const mins = Math.ceil(rem / 60000);
   const status = `${t(timer.phase)} · ${timer.running ? `${mins} min ${t('left')}` : `${fmt(rem)} ${t('paused')}`}`;
-  const key = [icon, status, timer.running, lang].join('|');
+  const key = [icon, status, timer.running, lang, update?.latest].join('|');
   if (!force && key === trayKey) return;
   trayKey = key;
   app.tray.set({
@@ -177,6 +185,7 @@ function updateTray(force = false) {
       { id: 'toggle', label: timer.running ? t('pause') : t('start') },
       { id: 'skip', label: t('skip') },
       { separator: true },
+      ...(update ? [{ id: 'update', label: t('updateTo', update.latest) }] : []),
       { id: 'show', label: t('show') },
       { id: 'quit', label: t('quit') },
     ],
@@ -244,7 +253,7 @@ export const api = {
     frontendDir = dir;
     if (l) lang = l;
     updateTray(true);
-    return { settings, state: snapshot(), firstRun };
+    return { settings, state: snapshot(), firstRun, update };
   },
 
   async setLang({ lang: l }) {
@@ -297,6 +306,18 @@ export const api = {
     if (timer.round > settings.rounds) timer.round = settings.rounds;
     changed();
     return settings;
+  },
+
+  // update.install swaps the app folder, starts the new version and quits.
+  // On Linux that new process dies with this one, so a detached shell starts
+  // it again a moment later (a second instance would just focus the first).
+  async installUpdate() {
+    await app.update.install();
+    if (IS_LINUX) {
+      tjs.spawn(['sh', '-c', '(sleep 2; exec "$0") >/dev/null 2>&1 &', EXE],
+        { stdin: 'ignore', stdout: 'ignore', stderr: 'ignore' });
+    }
+    return true;
   },
 
   async logExercise({ exercise, sets, amount, mode }) {
@@ -367,9 +388,23 @@ export function onTray(id) {
   if (id === 'toggle') api.toggle();
   if (id === 'skip') api.skip();
   if (id === 'show') { app.show(); app.push('focus-window'); }
+  if (id === 'update') { app.show(); app.push('update-available', update); }
   if (id === 'quit') app.quit();
 }
 
 export function onNotificationClick() {
   app.show();
+}
+
+// tinyjs checks the release manifest ("update" in tinyjs.json) at launch and
+// daily, but only reports; the page offers the install (update.install).
+// The runtime pushes 'update-available' to the page itself.
+export async function onUpdateAvailable(info) {
+  update = info;
+  updateTray(true);
+  const seen = await app.store.get('updateNotified').catch(() => null);
+  if (settings.notifications && seen !== info.latest) {
+    app.notify({ id: 'update', title: t('updateTitle', info.latest), body: t('updateBody') });
+    await app.store.set('updateNotified', info.latest).catch(() => {});
+  }
 }

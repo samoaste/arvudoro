@@ -529,6 +529,7 @@ function applySettings(keys = null) {
     if (l !== getLang() || !keys) {
       setLang(l);
       translateDom();
+      if (update) showUpdate(update);
       tiny.api.call('setLang', { lang: l }).catch(() => {});
       setMenu();
       if (keys) renderSettings();
@@ -637,6 +638,31 @@ async function onPhaseEnd({ from, to, state: s, skipped }) {
   renderTimer();
 }
 
+// ── update ──────────────────────────────────────────────────────────────────
+
+let update = null;   // { current, latest, notes } from the runtime's check
+
+function showUpdate(info) {
+  if (!info?.latest) return;
+  update = info;
+  $('updateText').textContent = t('updateAvailable', { v: info.latest });
+  $('updateBar').hidden = false;
+}
+
+async function installUpdate() {
+  if (state?.running && !(await tiny.dialog.confirm(t('updateConfirm'), { detail: t('updateDetail') }))) return;
+  const btn = $('updateBtn');
+  btn.disabled = true;
+  btn.textContent = t('updating');
+  try {
+    await tiny.api.call('installUpdate');   // quits into the new version
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = t('update');
+    toast(t('updateFailed', { msg: e?.message ?? e }), 8000);
+  }
+}
+
 // ── boot ────────────────────────────────────────────────────────────────────
 
 async function waitForTiny() {
@@ -677,6 +703,8 @@ async function boot() {
   tiny.api.on('state', onState);
   tiny.api.on('phase-end', onPhaseEnd);
   tiny.api.on('focus-window', () => showView('timer'));
+  tiny.api.on('update-available', showUpdate);
+  showUpdate(res.update);
   tiny.menu.on(onMenu);
   tiny.win.setMinSize(360, 560);
   let resizeTimer = 0;
@@ -696,6 +724,9 @@ async function boot() {
   $('skipBtn').addEventListener('click', () => tiny.api.call('skip'));
   $('skipSmBtn').addEventListener('click', () => tiny.api.call('skip'));
   $('restartBtn').addEventListener('click', () => tiny.api.call('reset'));
+  $('updateBtn').addEventListener('click', installUpdate);
+  $('updateLater').addEventListener('click', () => { $('updateBar').hidden = true; });
+  $('updateLater').title = t('later');
   $('restartBtn').title = t('restart');
   $('skipBtn').title = t('skip');
   $('skipSmBtn').title = t('skip');

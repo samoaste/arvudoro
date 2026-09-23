@@ -42,6 +42,9 @@ const STRINGS = {
     aboutBy: 'Built by {author} at Arvucore. Free and open source.',
     healthNote: 'Move within your limits. If something hurts, stop.',
     buyCoffee: 'Buy me a coffee ☕',
+    updateAvailable: 'Version {v} is available', update: 'Update', later: 'Later',
+    updating: 'Updating…', updateFailed: 'Update failed: {msg}',
+    updateConfirm: 'Update now?', updateDetail: 'The running timer will stop while Arvudoro restarts.',
     groups: { full: 'Full body', lower: 'Legs', upper: 'Upper body', posterior: 'Posterior chain', core: 'Core', cardio: 'Cardio' },
   },
   pt: {
@@ -83,6 +86,9 @@ const STRINGS = {
     aboutBy: 'Criado por {author} na Arvucore. Gratuito e de código aberto.',
     healthNote: 'Respeite seus limites. Se sentir dor, pare.',
     buyCoffee: 'Me pague um café ☕',
+    updateAvailable: 'A versão {v} está disponível', update: 'Atualizar', later: 'Depois',
+    updating: 'Atualizando…', updateFailed: 'Falha ao atualizar: {msg}',
+    updateConfirm: 'Atualizar agora?', updateDetail: 'O timer em andamento vai parar enquanto o Arvudoro reinicia.',
     groups: { full: 'Corpo inteiro', lower: 'Pernas', upper: 'Membros superiores', posterior: 'Cadeia posterior', core: 'Core', cardio: 'Cardio' },
   },
 };

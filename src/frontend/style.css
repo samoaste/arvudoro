@@ -363,6 +363,15 @@ select {
 
 /* ── toast ──────────────────────────────────────────────────────────────── */
 
+.update-bar {
+  display: flex; align-items: center; gap: 8px;
+  flex: none; margin: 8px 16px 0; padding: 6px 6px 6px 12px;
+  background: var(--elev); border: 1px solid var(--border);
+  font-size: 13px;
+}
+.update-bar span { flex: 1; }
+.update-bar .primary { min-width: 0; height: var(--arv-control-sm); padding: 0 14px; font-size: 13px; }
+
 .toast {
   position: fixed; left: 16px; right: 16px; bottom: 16px;
   padding: 10px 14px; background: var(--elev); border: 1px solid var(--border);
