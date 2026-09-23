@@ -6,6 +6,7 @@ Every channel below repackages the artifacts from one GitHub Release, which
 | Channel | Platform | How | Status |
 |---|---|---|---|
 | GitHub Releases | Linux x86_64/arm64, macOS, Windows | automatic on tag | ready |
+| `install.sh` | any Linux, per user | `packaging/linux/install.sh`: latest tarball into `~/.local/opt/arvudoro`, sha256 checked | ready |
 | In-app auto-update | all | `update.url` in `tinyjs.json` reads the release's `manifest.json` | ready |
 | AUR (`arvudoro-bin`) | Arch, Manjaro, EndeavourOS | `packaging/aur/PKGBUILD` | template |
 | winget | Windows 10/11 | `packaging/winget/` → PR to microsoft/winget-pkgs | template |

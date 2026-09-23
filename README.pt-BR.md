@@ -57,9 +57,17 @@ atualiza sozinho.
 
 | Sistema | Arquivo | Observações |
 |---|---|---|
-| Linux | `arvudoro-<versão>-linux-x86_64.tar.gz` (ou `arm64`) | Extraia e rode `arvudoro/arvudoro`; ele se adiciona ao menu de aplicativos. Precisa do `webkit2gtk-4.1` (já vem no Ubuntu 22.04+ e Fedora 38+). |
+| Linux | `arvudoro-<versão>-linux-x86_64.tar.gz` (ou `arm64`) | O jeito mais fácil sem root é a instalação em uma linha abaixo. Precisa do `webkit2gtk-4.1` (já vem no Ubuntu 22.04+ e Fedora 38+). |
 | macOS 14+ | `arvudoro-<versão>.zip` / `.dmg` | Ainda sem notarização: na primeira vez, clique com o botão direito → Abrir. |
 | Windows 10/11 | `arvudoro-<versão>-win.zip` | Extraia e rode `arvudoro.exe`. Versão beta. |
+
+Para instalar em qualquer Linux só para o seu usuário (em `~/.local`, sem root; rode de novo para atualizar):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/samoaste/arvudoro/main/packaging/linux/install.sh | sh
+```
+
+Para desinstalar, use o mesmo comando seguido de `-s -- --uninstall`.
 
 ## Desenvolvimento
 

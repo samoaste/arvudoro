@@ -62,9 +62,17 @@ apps update themselves.
 
 | OS | File | Notes |
 |---|---|---|
-| Linux | `arvudoro-<version>-linux-x86_64.tar.gz` (or `arm64`) | Extract and run `arvudoro/arvudoro`; it adds itself to the app menu. Needs `webkit2gtk-4.1` (preinstalled on Ubuntu 22.04+, Fedora 38+). |
+| Linux | `arvudoro-<version>-linux-x86_64.tar.gz` (or `arm64`) | Easiest without root: the one-line install below. Needs `webkit2gtk-4.1` (preinstalled on Ubuntu 22.04+, Fedora 38+). |
 | macOS 14+ | `arvudoro-<version>.zip` / `.dmg` | Not notarized yet: right-click → Open the first time. |
 | Windows 10/11 | `arvudoro-<version>-win.zip` | Extract and run `arvudoro.exe`. Beta. |
+
+Install on any Linux for your user only (into `~/.local`, no root; run it again to update):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/samoaste/arvudoro/main/packaging/linux/install.sh | sh
+```
+
+Uninstall with the same command followed by `-s -- --uninstall`.
 
 ## Develop
 
