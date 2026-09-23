@@ -2,7 +2,7 @@
 # then `brew install --cask samoaste/tap/arvudoro`); homebrew/cask itself
 # requires a notarized app and some traction.
 cask "arvudoro" do
-  version "0.1.0"
+  version "0.1.1"
   sha256 "0000000000000000000000000000000000000000000000000000000000000000"
 
   url "https://github.com/samoaste/arvudoro/releases/download/v#{version}/arvudoro-#{version}.zip"

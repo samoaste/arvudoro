@@ -1,4 +1,4 @@
-First release of Arvudoro: a pomodoro timer whose breaks are compound exercises.
+First public release of Arvudoro, now for Linux, macOS and Windows: a pomodoro timer whose breaks are compound exercises.
 
 - Focus, short break, long break and rounds, with tray icon, notifications, sounds and auto-start options
 - 21 compound exercises with animated demonstrations (dumbbells, pull-up bar, jump rope, bodyweight)

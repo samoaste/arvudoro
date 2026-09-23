@@ -3,7 +3,7 @@
 # https://github.com/microsoft/winget-pkgs under manifests/a/Arvucore/Arvudoro/<version>/
 # (or run `wingetcreate new <zip url>`, which generates the split manifests).
 PackageIdentifier: Arvucore.Arvudoro
-PackageVersion: 0.1.0
+PackageVersion: 0.1.1
 PackageLocale: en-US
 Publisher: Arvucore
 PublisherUrl: https://github.com/samoaste
@@ -20,7 +20,7 @@ Installers:
     NestedInstallerFiles:
       - RelativeFilePath: arvudoro\arvudoro.exe
         PortableCommandAlias: arvudoro
-    InstallerUrl: https://github.com/samoaste/arvudoro/releases/download/v0.1.0/arvudoro-0.1.0-win.zip
+    InstallerUrl: https://github.com/samoaste/arvudoro/releases/download/v0.1.1/arvudoro-0.1.1-win.zip
     InstallerSha256: 0000000000000000000000000000000000000000000000000000000000000000
 ManifestType: singleton
 ManifestVersion: 1.6.0
